@@ -1,0 +1,175 @@
+import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+
+const sidebars: SidebarsConfig = {
+  docsSidebar: [
+    'intro',
+    'getting-started',
+    {
+      type: 'category',
+      label: 'Architecture',
+      collapsed: false,
+      items: [
+        'architecture/overview',
+        'architecture/tech-stack',
+        'architecture/data-flow',
+        'architecture/security',
+        'architecture/scalability',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Microservices',
+      collapsed: false,
+      items: [
+        'microservices/overview',
+        {
+          type: 'category',
+          label: 'Spring Boot Services',
+          items: [
+            'microservices/spring-boot/auth-service',
+            'microservices/spring-boot/user-service',
+            'microservices/spring-boot/permission-service',
+            'microservices/spring-boot/audit-service',
+            'microservices/spring-boot/admin-service',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'NestJS Services',
+          items: [
+            'microservices/nestjs/backend-gateway',
+            'microservices/nestjs/realtime-service',
+            'microservices/nestjs/notification-service',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Elixir Services',
+          items: [
+            'microservices/elixir/presence-service',
+            'microservices/elixir/call-service',
+            'microservices/elixir/message-service',
+            'microservices/elixir/notification-orchestrator',
+            'microservices/elixir/huddle-service',
+            'microservices/elixir/event-broadcast-service',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Go Services',
+          items: [
+            'microservices/go/workspace-service',
+            'microservices/go/channel-service',
+            'microservices/go/search-service',
+            'microservices/go/thread-service',
+            'microservices/go/bookmark-service',
+            'microservices/go/reminder-service',
+            'microservices/go/media-service',
+            'microservices/go/file-service',
+            'microservices/go/attachment-service',
+            'microservices/go/cdn-service',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Python Services',
+          items: [
+            'microservices/python/analytics-service',
+            'microservices/python/moderation-service',
+            'microservices/python/export-service',
+            'microservices/python/integration-service',
+            'microservices/python/ml-service',
+            'microservices/python/sentiment-service',
+            'microservices/python/insights-service',
+            'microservices/python/smart-reply-service',
+          ],
+        },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Common Utilities',
+      items: [
+        'common/overview',
+        'common/security',
+        'common/guards',
+        'common/casbin-rbac',
+        'common/audit-logging',
+        'common/exceptions',
+        'common/vault',
+        'common/consul',
+        'common/kafka',
+        'common/database',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Infrastructure',
+      items: [
+        'infrastructure/index',
+        'infrastructure/docker',
+        'infrastructure/nginx',
+        'infrastructure/postgres',
+        'infrastructure/mysql',
+        'infrastructure/mongodb',
+        'infrastructure/redis',
+        'infrastructure/elasticsearch',
+        'infrastructure/kafka',
+        'infrastructure/vault',
+        'infrastructure/consul',
+        'infrastructure/monitoring',
+        'infrastructure/kubernetes',
+        'infrastructure/ci-cd',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Deployment',
+      items: [
+        'deployment/index',
+        'deployment/local',
+        'deployment/dev',
+        'deployment/qa',
+        'deployment/uat',
+        'deployment/staging',
+        'deployment/production',
+        'deployment/live',
+      ],
+    },
+  ],
+  apiSidebar: [
+    'api/overview',
+    {
+      type: 'category',
+      label: 'REST API',
+      items: [
+        'api/rest/index',
+        'api/rest/authentication',
+        'api/rest/users',
+        'api/rest/workspaces',
+        'api/rest/channels',
+        'api/rest/messages',
+        'api/rest/calls',
+        'api/rest/files',
+        'api/rest/search',
+        'api/rest/notifications',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'WebSocket API',
+      items: [
+        'api/websocket/index',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'gRPC API',
+      items: [
+        'api/grpc/index',
+      ],
+    },
+  ],
+};
+
+export default sidebars;
