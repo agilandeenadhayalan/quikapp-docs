@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Local Environment (Mock)
 
-The local environment enables developers to run the entire QuckChat stack on their machine with mocked external services and seeded data.
+The local environment enables developers to run the entire QuikApp stack on their machine with mocked external services and seeded data.
 
 ## Overview
 
@@ -33,8 +33,8 @@ The local environment enables developers to run the entire QuckChat stack on the
 
 ```bash
 # Clone repository
-git clone https://github.com/quckchat/quckchat.git
-cd quckchat
+git clone https://github.com/QuikApp/QuikApp.git
+cd QuikApp
 
 # Copy environment template
 cp .env.example .env.local
@@ -62,9 +62,9 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: quckchat
+      POSTGRES_USER: QuikApp
       POSTGRES_PASSWORD: localpass
-      POSTGRES_DB: quckchat
+      POSTGRES_DB: QuikApp
     ports:
       - "5432:5432"
     volumes:
@@ -75,7 +75,7 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: localroot
-      MYSQL_USER: quckchat
+      MYSQL_USER: QuikApp
       MYSQL_PASSWORD: localpass
     ports:
       - "3306:3306"
@@ -86,7 +86,7 @@ services:
   mongodb:
     image: mongo:6.0
     environment:
-      MONGO_INITDB_ROOT_USERNAME: quckchat
+      MONGO_INITDB_ROOT_USERNAME: QuikApp
       MONGO_INITDB_ROOT_PASSWORD: localpass
     ports:
       - "27017:27017"
@@ -176,7 +176,7 @@ volumes:
 
 networks:
   default:
-    name: quckchat-local
+    name: QuikApp-local
 ```
 
 ## Environment Variables
@@ -191,24 +191,24 @@ ENVIRONMENT=local
 # API URLs
 API_URL=http://localhost:3000
 WS_URL=ws://localhost:3001
-CDN_URL=http://localhost:4566/quckchat-local
+CDN_URL=http://localhost:4566/QuikApp-local
 
 # Database - PostgreSQL
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
-POSTGRES_USER=quckchat
+POSTGRES_USER=QuikApp
 POSTGRES_PASSWORD=localpass
-POSTGRES_DB=quckchat
+POSTGRES_DB=QuikApp
 
 # Database - MySQL
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
-MYSQL_USER=quckchat
+MYSQL_USER=QuikApp
 MYSQL_PASSWORD=localpass
-MYSQL_DATABASE=quckchat_auth
+MYSQL_DATABASE=QuikApp_auth
 
 # Database - MongoDB
-MONGODB_URI=mongodb://quckchat:localpass@localhost:27017/quckchat?authSource=admin
+MONGODB_URI=mongodb://QuikApp:localpass@localhost:27017/QuikApp?authSource=admin
 
 # Redis
 REDIS_URL=redis://localhost:6379
@@ -232,7 +232,7 @@ AWS_ENDPOINT=http://localhost:4566
 AWS_ACCESS_KEY_ID=test
 AWS_SECRET_ACCESS_KEY=test
 AWS_REGION=us-east-1
-S3_BUCKET=quckchat-local
+S3_BUCKET=QuikApp-local
 
 # Mock Email (MailHog)
 SMTP_HOST=localhost
@@ -264,28 +264,28 @@ echo "Seeding local databases..."
 ./scripts/wait-for-it.sh localhost:27017 -t 30
 
 # Seed PostgreSQL
-psql -h localhost -U quckchat -d quckchat -f ./seeds/postgres/workspaces.sql
-psql -h localhost -U quckchat -d quckchat -f ./seeds/postgres/channels.sql
+psql -h localhost -U QuikApp -d QuikApp -f ./seeds/postgres/workspaces.sql
+psql -h localhost -U QuikApp -d QuikApp -f ./seeds/postgres/channels.sql
 
 # Seed MySQL
-mysql -h localhost -u quckchat -plocalpass quckchat_auth < ./seeds/mysql/users.sql
-mysql -h localhost -u quckchat -plocalpass quckchat_auth < ./seeds/mysql/roles.sql
+mysql -h localhost -u QuikApp -plocalpass QuikApp_auth < ./seeds/mysql/users.sql
+mysql -h localhost -u QuikApp -plocalpass QuikApp_auth < ./seeds/mysql/roles.sql
 
 # Seed MongoDB
-mongosh "mongodb://quckchat:localpass@localhost:27017/quckchat?authSource=admin" ./seeds/mongodb/messages.js
+mongosh "mongodb://QuikApp:localpass@localhost:27017/QuikApp?authSource=admin" ./seeds/mongodb/messages.js
 
 # Seed Elasticsearch indices
-curl -X PUT "localhost:9200/quckchat-messages" -H "Content-Type: application/json" -d @./seeds/elasticsearch/messages-mapping.json
-curl -X POST "localhost:9200/quckchat-messages/_bulk" -H "Content-Type: application/json" --data-binary @./seeds/elasticsearch/messages-data.json
+curl -X PUT "localhost:9200/QuikApp-messages" -H "Content-Type: application/json" -d @./seeds/elasticsearch/messages-mapping.json
+curl -X POST "localhost:9200/QuikApp-messages/_bulk" -H "Content-Type: application/json" --data-binary @./seeds/elasticsearch/messages-data.json
 
 # Setup LocalStack S3
-aws --endpoint-url=http://localhost:4566 s3 mb s3://quckchat-local
-aws --endpoint-url=http://localhost:4566 s3 cp ./seeds/files/ s3://quckchat-local/files/ --recursive
+aws --endpoint-url=http://localhost:4566 s3 mb s3://QuikApp-local
+aws --endpoint-url=http://localhost:4566 s3 cp ./seeds/files/ s3://QuikApp-local/files/ --recursive
 
 # Setup Vault secrets
 export VAULT_ADDR=http://localhost:8200
 export VAULT_TOKEN=local-dev-token
-vault kv put secret/database/postgres host=localhost port=5432 username=quckchat password=localpass
+vault kv put secret/database/postgres host=localhost port=5432 username=QuikApp password=localpass
 vault kv put secret/jwt access_secret=local-access-secret refresh_secret=local-refresh-secret
 
 echo "Seeding complete!"

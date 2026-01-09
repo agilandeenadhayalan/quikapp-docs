@@ -4,7 +4,7 @@ sidebar_position: 12
 
 # Elasticsearch
 
-QuckChat uses Elasticsearch for full-text search, providing fast and relevant search results across messages, users, channels, and files.
+QuikApp uses Elasticsearch for full-text search, providing fast and relevant search results across messages, users, channels, and files.
 
 ## Architecture
 
@@ -43,7 +43,7 @@ QuckChat uses Elasticsearch for full-text search, providing fast and relevant se
 ### Messages Index
 
 ```json
-PUT /quckchat-messages
+PUT /QuikApp-messages
 {
   "settings": {
     "number_of_shards": 5,
@@ -120,7 +120,7 @@ PUT /quckchat-messages
 ### Users Index
 
 ```json
-PUT /quckchat-users
+PUT /QuikApp-users
 {
   "settings": {
     "number_of_shards": 2,
@@ -170,7 +170,7 @@ PUT /quckchat-users
 ### Channels Index
 
 ```json
-PUT /quckchat-channels
+PUT /QuikApp-channels
 {
   "settings": {
     "number_of_shards": 2,
@@ -200,7 +200,7 @@ PUT /quckchat-channels
 ### Files Index
 
 ```json
-PUT /quckchat-files
+PUT /QuikApp-files
 {
   "settings": {
     "number_of_shards": 3,
@@ -237,12 +237,12 @@ PUT /quckchat-files
 services:
   elasticsearch:
     image: elasticsearch:8.8.0
-    container_name: quckchat-elasticsearch
+    container_name: QuikApp-elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-      - cluster.name=quckchat-cluster
+      - cluster.name=QuikApp-cluster
       - bootstrap.memory_lock=true
     ulimits:
       memlock:
@@ -254,7 +254,7 @@ services:
       - "9200:9200"
       - "9300:9300"
     networks:
-      - quckchat-network
+      - QuikApp-network
     healthcheck:
       test: curl -s http://localhost:9200/_cluster/health | grep -vq '"status":"red"'
       interval: 20s
@@ -274,7 +274,7 @@ services:
     image: elasticsearch:8.8.0
     environment:
       - node.name=es01
-      - cluster.name=quckchat-cluster
+      - cluster.name=QuikApp-cluster
       - discovery.seed_hosts=es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
@@ -283,33 +283,33 @@ services:
     volumes:
       - es01_data:/usr/share/elasticsearch/data
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   es02:
     image: elasticsearch:8.8.0
     environment:
       - node.name=es02
-      - cluster.name=quckchat-cluster
+      - cluster.name=QuikApp-cluster
       - discovery.seed_hosts=es01,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     volumes:
       - es02_data:/usr/share/elasticsearch/data
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   es03:
     image: elasticsearch:8.8.0
     environment:
       - node.name=es03
-      - cluster.name=quckchat-cluster
+      - cluster.name=QuikApp-cluster
       - discovery.seed_hosts=es01,es02
       - cluster.initial_master_nodes=es01,es02,es03
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     volumes:
       - es03_data:/usr/share/elasticsearch/data
     networks:
-      - quckchat-network
+      - QuikApp-network
 
 volumes:
   es01_data:
@@ -354,7 +354,7 @@ func NewClient(urls []string) (*Client, error) {
 
 func (c *Client) IndexMessage(ctx context.Context, msg *Message) error {
     _, err := c.es.Index().
-        Index("quckchat-messages").
+        Index("QuikApp-messages").
         Id(msg.ID).
         BodyJson(msg).
         Do(ctx)
@@ -370,7 +370,7 @@ func (c *Client) SearchMessages(ctx context.Context, query string, workspaceID s
         Filter(elastic.NewTermQuery("deleted", false))
 
     result, err := c.es.Search().
-        Index("quckchat-messages").
+        Index("QuikApp-messages").
         Query(searchQuery).
         Sort("_score", false).
         Sort("createdAt", false).
@@ -420,8 +420,8 @@ export class ElasticsearchService {
     const { query, workspaceId, type, limit = 20 } = params;
 
     const indices = type
-      ? [`quckchat-${type}`]
-      : ['quckchat-messages', 'quckchat-users', 'quckchat-channels', 'quckchat-files'];
+      ? [`QuikApp-${type}`]
+      : ['QuikApp-messages', 'QuikApp-users', 'QuikApp-channels', 'QuikApp-files'];
 
     const response = await this.client.search({
       index: indices,
@@ -463,7 +463,7 @@ export class ElasticsearchService {
 
   async indexDocument(index: string, id: string, document: any): Promise<void> {
     await this.client.index({
-      index: `quckchat-${index}`,
+      index: `QuikApp-${index}`,
       id,
       body: document,
       refresh: true,
@@ -472,7 +472,7 @@ export class ElasticsearchService {
 
   async deleteDocument(index: string, id: string): Promise<void> {
     await this.client.delete({
-      index: `quckchat-${index}`,
+      index: `QuikApp-${index}`,
       id,
     });
   }
@@ -520,13 +520,13 @@ def search_messages(query: str, workspace_id: str, limit: int = 20):
         ]
     }
 
-    response = es.search(index="quckchat-messages", body=body)
+    response = es.search(index="QuikApp-messages", body=body)
     return response['hits']['hits']
 
 def bulk_index_messages(messages: list):
     actions = [
         {
-            "_index": "quckchat-messages",
+            "_index": "QuikApp-messages",
             "_id": msg['id'],
             "_source": msg
         }
@@ -540,7 +540,7 @@ def bulk_index_messages(messages: list):
 ### Global Search
 
 ```json
-POST /quckchat-*/_search
+POST /QuikApp-*/_search
 {
   "query": {
     "bool": {
@@ -574,7 +574,7 @@ POST /quckchat-*/_search
 ### User Autocomplete
 
 ```json
-POST /quckchat-users/_search
+POST /QuikApp-users/_search
 {
   "suggest": {
     "user-suggest": {
@@ -594,7 +594,7 @@ POST /quckchat-users/_search
 ### Messages in Date Range
 
 ```json
-POST /quckchat-messages/_search
+POST /QuikApp-messages/_search
 {
   "query": {
     "bool": {
@@ -613,7 +613,7 @@ POST /quckchat-messages/_search
 ### Aggregation - Messages per Day
 
 ```json
-POST /quckchat-messages/_search
+POST /QuikApp-messages/_search
 {
   "size": 0,
   "query": {
@@ -640,7 +640,7 @@ POST /quckchat-messages/_search
 ### Index Lifecycle Management
 
 ```json
-PUT _ilm/policy/quckchat-messages-policy
+PUT _ilm/policy/QuikApp-messages-policy
 {
   "policy": {
     "phases": {
@@ -677,10 +677,10 @@ PUT _ilm/policy/quckchat-messages-policy
 POST _reindex
 {
   "source": {
-    "index": "quckchat-messages-old"
+    "index": "QuikApp-messages-old"
   },
   "dest": {
-    "index": "quckchat-messages"
+    "index": "QuikApp-messages"
   }
 }
 ```
@@ -697,7 +697,7 @@ curl -X GET "localhost:9200/_cluster/health?pretty"
 curl -X GET "localhost:9200/_nodes/stats?pretty"
 
 # Index stats
-curl -X GET "localhost:9200/quckchat-*/_stats?pretty"
+curl -X GET "localhost:9200/QuikApp-*/_stats?pretty"
 
 # Pending tasks
 curl -X GET "localhost:9200/_cluster/pending_tasks?pretty"
@@ -710,7 +710,7 @@ curl -X GET "localhost:9200/_cluster/pending_tasks?pretty"
 services:
   elasticsearch-exporter:
     image: quay.io/prometheuscommunity/elasticsearch-exporter:v1.6.0
-    container_name: quckchat-es-exporter
+    container_name: QuikApp-es-exporter
     command:
       - '--es.uri=http://elasticsearch:9200'
       - '--es.all'
@@ -718,7 +718,7 @@ services:
     ports:
       - "9114:9114"
     networks:
-      - quckchat-network
+      - QuikApp-network
 ```
 
 ## Backup & Recovery
@@ -726,11 +726,11 @@ services:
 ### Snapshot Repository
 
 ```json
-PUT _snapshot/quckchat-backup
+PUT _snapshot/QuikApp-backup
 {
   "type": "s3",
   "settings": {
-    "bucket": "quckchat-es-backups",
+    "bucket": "QuikApp-es-backups",
     "region": "us-east-1",
     "compress": true
   }
@@ -740,9 +740,9 @@ PUT _snapshot/quckchat-backup
 ### Create Snapshot
 
 ```json
-PUT _snapshot/quckchat-backup/snapshot-2024-01-15
+PUT _snapshot/QuikApp-backup/snapshot-2024-01-15
 {
-  "indices": "quckchat-*",
+  "indices": "QuikApp-*",
   "ignore_unavailable": true,
   "include_global_state": false
 }
@@ -751,10 +751,10 @@ PUT _snapshot/quckchat-backup/snapshot-2024-01-15
 ### Restore Snapshot
 
 ```json
-POST _snapshot/quckchat-backup/snapshot-2024-01-15/_restore
+POST _snapshot/QuikApp-backup/snapshot-2024-01-15/_restore
 {
-  "indices": "quckchat-messages",
-  "rename_pattern": "quckchat-(.+)",
-  "rename_replacement": "restored-quckchat-$1"
+  "indices": "QuikApp-messages",
+  "rename_pattern": "QuikApp-(.+)",
+  "rename_replacement": "restored-QuikApp-$1"
 }
 ```

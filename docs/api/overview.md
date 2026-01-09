@@ -4,15 +4,15 @@ sidebar_position: 1
 
 # API Reference
 
-QuckChat provides REST, WebSocket, and gRPC APIs for client integration.
+QuikApp provides REST, WebSocket, and gRPC APIs for client integration.
 
 ## Base URLs
 
 | Environment | URL |
 |------------|-----|
 | Development | `http://localhost:3000` |
-| Staging | `https://api.staging.quckchat.dev` |
-| Production | `https://api.quckchat.dev` |
+| Staging | `https://api.staging.QuikApp.dev` |
+| Production | `https://api.QuikApp.dev` |
 
 ## Authentication
 

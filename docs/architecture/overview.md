@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Architecture Overview
 
-QuckChat is built on a **polyglot microservices architecture** designed for scalability, maintainability, and performance.
+QuikApp is built on a **polyglot microservices architecture** designed for scalability, maintainability, and performance.
 
 ## High-Level Architecture
 

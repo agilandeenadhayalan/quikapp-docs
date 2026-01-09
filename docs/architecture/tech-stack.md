@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Technology Stack
 
-Detailed breakdown of all technologies used in QuckChat.
+Detailed breakdown of all technologies used in QuikApp.
 
 ## Backend Languages & Frameworks
 
@@ -93,7 +93,7 @@ end
 **Used for**: High-performance CRUD, File handling, Search
 
 ```go
-module quckchat/workspace-service
+module QuikApp/workspace-service
 
 go 1.21
 
@@ -154,8 +154,8 @@ transformers==4.35.2
 postgresql:
   image: postgres:16
   environment:
-    POSTGRES_DB: quckchat
-    POSTGRES_USER: quckchat
+    POSTGRES_DB: QuikApp
+    POSTGRES_USER: QuikApp
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   volumes:
     - postgres_data:/var/lib/postgresql/data
@@ -180,7 +180,7 @@ mysql:
   image: mysql:8.0
   environment:
     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    MYSQL_DATABASE: quckchat
+    MYSQL_DATABASE: QuikApp
   command: --default-authentication-plugin=mysql_native_password
 ```
 
@@ -242,7 +242,7 @@ redis:
     "number_of_replicas": 1,
     "analysis": {
       "analyzer": {
-        "quckchat_analyzer": {
+        "QuikApp_analyzer": {
           "type": "custom",
           "tokenizer": "standard",
           "filter": ["lowercase", "snowball"]
@@ -271,12 +271,12 @@ kafka:
 
 **Topics**:
 ```
-quckchat.users.events
-quckchat.messages.events
-quckchat.presence.events
-quckchat.notifications.events
-quckchat.analytics.events
-quckchat.audit.events
+QuikApp.users.events
+QuikApp.messages.events
+QuikApp.presence.events
+QuikApp.notifications.events
+QuikApp.analytics.events
+QuikApp.audit.events
 ```
 
 ### RabbitMQ 3.12
@@ -293,10 +293,10 @@ rabbitmq:
 
 **Queues**:
 ```
-quckchat.email.queue
-quckchat.push.queue
-quckchat.media.processing.queue
-quckchat.export.queue
+QuikApp.email.queue
+QuikApp.push.queue
+QuikApp.media.processing.queue
+QuikApp.export.queue
 ```
 
 ## Infrastructure
@@ -332,15 +332,15 @@ server {
 **Used for**: Secrets management, encryption
 
 ```hcl
-path "secret/data/quckchat/*" {
+path "secret/data/QuikApp/*" {
   capabilities = ["read", "list"]
 }
 
-path "database/creds/quckchat-role" {
+path "database/creds/QuikApp-role" {
   capabilities = ["read"]
 }
 
-path "transit/encrypt/quckchat-key" {
+path "transit/encrypt/QuikApp-key" {
   capabilities = ["update"]
 }
 ```
@@ -369,7 +369,7 @@ path "transit/encrypt/quckchat-key" {
 ```yaml
 prometheus:
   scrape_configs:
-    - job_name: 'quckchat-services'
+    - job_name: 'QuikApp-services'
       static_configs:
         - targets:
           - 'backend:3000'
@@ -383,7 +383,7 @@ prometheus:
 // NestJS integration
 import tracer from 'dd-trace';
 tracer.init({
-  service: 'quckchat-backend',
+  service: 'QuikApp-backend',
   env: process.env.NODE_ENV,
 });
 ```

@@ -47,7 +47,7 @@ interface NotificationPayload {
 ## Kafka Consumer
 
 ```typescript
-@EventPattern('quckchat.notifications.events')
+@EventPattern('QuikApp.notifications.events')
 async handleNotification(payload: NotificationPayload) {
   const userPrefs = await this.getUserPreferences(payload.userId);
 

@@ -3,13 +3,13 @@ sidebar_position: 1
 slug: /
 ---
 
-# QuckChat Documentation
+# QuikApp Documentation
 
-Welcome to **QuckChat** - an enterprise-grade, polyglot microservices chat platform built for scale, performance, and reliability.
+Welcome to **QuikApp** - an enterprise-grade, polyglot microservices chat platform built for scale, performance, and reliability.
 
-## What is QuckChat?
+## What is QuikApp?
 
-QuckChat is a modern real-time communication platform that combines the best practices of distributed systems architecture with cutting-edge technologies. It's designed to handle millions of concurrent users while maintaining sub-second message delivery.
+QuikApp is a modern real-time communication platform that combines the best practices of distributed systems architecture with cutting-edge technologies. It's designed to handle millions of concurrent users while maintaining sub-second message delivery.
 
 ## Key Features
 
@@ -23,7 +23,7 @@ QuckChat is a modern real-time communication platform that combines the best pra
 
 ## Architecture Overview
 
-QuckChat is built on a **polyglot microservices architecture** using the best language for each task:
+QuikApp is built on a **polyglot microservices architecture** using the best language for each task:
 
 | Technology | Use Case | Services |
 |------------|----------|----------|

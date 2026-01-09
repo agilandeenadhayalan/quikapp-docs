@@ -4,16 +4,16 @@ sidebar_position: 6
 
 # Kubernetes Deployment
 
-QuckChat uses Kubernetes for production orchestration, providing auto-scaling, self-healing, and rolling deployments.
+QuikApp uses Kubernetes for production orchestration, providing auto-scaling, self-healing, and rolling deployments.
 
 ## Namespace Structure
 
 ```
-├── quckchat-core       # Core application services
-├── quckchat-data       # Databases and storage
-├── quckchat-infra      # Infrastructure (Kafka, Redis)
-├── quckchat-monitoring # Prometheus, Grafana, Jaeger
-└── quckchat-ingress    # Nginx Ingress controllers
+├── QuikApp-core       # Core application services
+├── QuikApp-data       # Databases and storage
+├── QuikApp-infra      # Infrastructure (Kafka, Redis)
+├── QuikApp-monitoring # Prometheus, Grafana, Jaeger
+└── QuikApp-ingress    # Nginx Ingress controllers
 ```
 
 ## Deployment Examples
@@ -26,7 +26,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: quckchat-core
+  namespace: QuikApp-core
   labels:
     app: backend
     tier: api
@@ -52,7 +52,7 @@ spec:
       serviceAccountName: backend-sa
       containers:
         - name: backend
-          image: registry.quckchat.dev/backend:v1.0.0
+          image: registry.QuikApp.dev/backend:v1.0.0
           ports:
             - containerPort: 3000
               name: http
@@ -116,7 +116,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend
-  namespace: quckchat-core
+  namespace: QuikApp-core
   labels:
     app: backend
 spec:
@@ -138,7 +138,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: backend-hpa
-  namespace: quckchat-core
+  namespace: QuikApp-core
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -189,7 +189,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: api-ingress
-  namespace: quckchat-core
+  namespace: QuikApp-core
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -199,10 +199,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - api.quckchat.dev
+        - api.QuikApp.dev
       secretName: api-tls
   rules:
-    - host: api.quckchat.dev
+    - host: api.QuikApp.dev
       http:
         paths:
           - path: /api/v1/auth
@@ -238,13 +238,13 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
-  namespace: quckchat-core
+  namespace: QuikApp-core
 data:
   LOG_LEVEL: "info"
   KAFKA_BROKERS: "kafka-0.kafka:9092,kafka-1.kafka:9092,kafka-2.kafka:9092"
-  REDIS_CLUSTER: "redis-cluster.quckchat-infra:6379"
-  CONSUL_HOST: "consul.quckchat-infra:8500"
-  JAEGER_ENDPOINT: "http://jaeger.quckchat-monitoring:14268/api/traces"
+  REDIS_CLUSTER: "redis-cluster.QuikApp-infra:6379"
+  CONSUL_HOST: "consul.QuikApp-infra:8500"
+  JAEGER_ENDPOINT: "http://jaeger.QuikApp-monitoring:14268/api/traces"
 ```
 
 ### Secret (sealed)
@@ -255,7 +255,7 @@ apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
   name: database-credentials
-  namespace: quckchat-core
+  namespace: QuikApp-core
 spec:
   encryptedData:
     postgres-url: AgBy8hX...encrypted...
@@ -271,7 +271,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
-  namespace: quckchat-data
+  namespace: QuikApp-data
 spec:
   serviceName: postgres
   replicas: 3
@@ -330,7 +330,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: backend-network-policy
-  namespace: quckchat-core
+  namespace: QuikApp-core
 spec:
   podSelector:
     matchLabels:
@@ -342,7 +342,7 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              name: quckchat-ingress
+              name: QuikApp-ingress
         - podSelector:
             matchLabels:
               app: nginx-ingress
@@ -353,7 +353,7 @@ spec:
     - to:
         - namespaceSelector:
             matchLabels:
-              name: quckchat-data
+              name: QuikApp-data
       ports:
         - protocol: TCP
           port: 5432
@@ -362,7 +362,7 @@ spec:
     - to:
         - namespaceSelector:
             matchLabels:
-              name: quckchat-infra
+              name: QuikApp-infra
       ports:
         - protocol: TCP
           port: 9092
@@ -371,7 +371,7 @@ spec:
 ## Helm Chart Structure
 
 ```
-quckchat-helm/
+QuikApp-helm/
 ├── Chart.yaml
 ├── values.yaml
 ├── values-prod.yaml
@@ -397,7 +397,7 @@ quckchat-helm/
 # values.yaml
 global:
   environment: production
-  imageRegistry: registry.quckchat.dev
+  imageRegistry: registry.QuikApp.dev
 
 backend:
   replicaCount: 3
@@ -440,20 +440,20 @@ kafka:
 kubectl apply -k k8s/overlays/production
 
 # Deploy with Helm
-helm upgrade --install quckchat ./quckchat-helm \
+helm upgrade --install QuikApp ./QuikApp-helm \
   -f values-prod.yaml \
-  --namespace quckchat-core \
+  --namespace QuikApp-core \
   --create-namespace
 
 # Check deployment status
-kubectl rollout status deployment/backend -n quckchat-core
+kubectl rollout status deployment/backend -n QuikApp-core
 
 # Scale manually
-kubectl scale deployment/backend --replicas=5 -n quckchat-core
+kubectl scale deployment/backend --replicas=5 -n QuikApp-core
 
 # View logs
-kubectl logs -f deployment/backend -n quckchat-core
+kubectl logs -f deployment/backend -n QuikApp-core
 
 # Port forward for debugging
-kubectl port-forward svc/backend 3000:3000 -n quckchat-core
+kubectl port-forward svc/backend 3000:3000 -n QuikApp-core
 ```

@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Monitoring & Observability
 
-QuckChat uses a comprehensive monitoring stack for metrics, logging, and distributed tracing.
+QuikApp uses a comprehensive monitoring stack for metrics, logging, and distributed tracing.
 
 ## Stack Overview
 
@@ -208,7 +208,7 @@ groups:
 ```json
 {
   "dashboard": {
-    "title": "QuckChat Services Overview",
+    "title": "QuikApp Services Overview",
     "panels": [
       {
         "title": "Request Rate",
@@ -440,7 +440,7 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   grafana:
     image: grafana/grafana:10.1.0
@@ -453,7 +453,7 @@ services:
     ports:
       - "3030:3000"
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   loki:
     image: grafana/loki:2.9.0
@@ -464,7 +464,7 @@ services:
     ports:
       - "3100:3100"
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   promtail:
     image: grafana/promtail:2.9.0
@@ -474,7 +474,7 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
     command: -config.file=/etc/promtail/promtail-config.yml
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   jaeger:
     image: jaegertracing/all-in-one:1.50
@@ -485,7 +485,7 @@ services:
       - "14268:14268"
       - "4317:4317"
     networks:
-      - quckchat-network
+      - QuikApp-network
 
 volumes:
   prometheus_data:
@@ -493,6 +493,6 @@ volumes:
   loki_data:
 
 networks:
-  quckchat-network:
+  QuikApp-network:
     external: true
 ```

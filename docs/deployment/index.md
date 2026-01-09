@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Deployment Overview
 
-QuckChat supports multiple deployment environments, each serving a specific purpose in the software development lifecycle.
+QuikApp supports multiple deployment environments, each serving a specific purpose in the software development lifecycle.
 
 ## Environment Hierarchy
 
@@ -14,7 +14,7 @@ QuckChat supports multiple deployment environments, each serving a specific purp
 │  ┌─────────────────────────────┐  ┌─────────────────────────────┐       │
 │  │         LIVE               │  │       PRODUCTION            │       │
 │  │   (Blue/Green Active)      │◄─│    (Release Candidate)      │       │
-│  │   live.quckchat.com        │  │   prod.quckchat.com         │       │
+│  │   live.QuikApp.com        │  │   prod.QuikApp.com         │       │
 │  └─────────────────────────────┘  └─────────────────────────────┘       │
 └─────────────────────────────────────────────────────────────────────────┘
                                     │
@@ -24,7 +24,7 @@ QuckChat supports multiple deployment environments, each serving a specific purp
 │  ┌─────────────────────────────┐                                        │
 │  │         STAGING             │                                        │
 │  │   (Production Mirror)       │                                        │
-│  │   staging.quckchat.com      │                                        │
+│  │   staging.QuikApp.com      │                                        │
 │  └─────────────────────────────┘                                        │
 └─────────────────────────────────────────────────────────────────────────┘
                                     │
@@ -34,7 +34,7 @@ QuckChat supports multiple deployment environments, each serving a specific purp
 │  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐               │
 │  │     UAT1      │  │     UAT2      │  │     UAT3      │               │
 │  │  (Feature A)  │  │  (Feature B)  │  │  (Regression) │               │
-│  │ uat1.quckchat │  │ uat2.quckchat │  │ uat3.quckchat │               │
+│  │ uat1.QuikApp │  │ uat2.QuikApp │  │ uat3.QuikApp │               │
 │  └───────────────┘  └───────────────┘  └───────────────┘               │
 └─────────────────────────────────────────────────────────────────────────┘
                                     │
@@ -44,7 +44,7 @@ QuckChat supports multiple deployment environments, each serving a specific purp
 │  ┌─────────────────────────────┐                                        │
 │  │            QA               │                                        │
 │  │   (Quality Assurance)       │                                        │
-│  │   qa.quckchat.com           │                                        │
+│  │   qa.QuikApp.com           │                                        │
 │  └─────────────────────────────┘                                        │
 └─────────────────────────────────────────────────────────────────────────┘
                                     │
@@ -54,7 +54,7 @@ QuckChat supports multiple deployment environments, each serving a specific purp
 │  ┌─────────────────────────────┐  ┌─────────────────────────────┐       │
 │  │           DEV               │  │          LOCAL              │       │
 │  │   (Integration Testing)     │  │     (Developer Machine)     │       │
-│  │   dev.quckchat.com          │  │     localhost:3000          │       │
+│  │   dev.QuikApp.com          │  │     localhost:3000          │       │
 │  └─────────────────────────────┘  └─────────────────────────────┘       │
 └─────────────────────────────────────────────────────────────────────────┘
 ```

@@ -4,12 +4,12 @@ sidebar_position: 1
 
 # REST API
 
-QuckChat provides a comprehensive REST API for all platform operations.
+QuikApp provides a comprehensive REST API for all platform operations.
 
 ## Base URL
 
 ```
-https://api.quckchat.dev/api/v1
+https://api.QuikApp.dev/api/v1
 ```
 
 ## Authentication

@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Docker Configuration
 
-QuckChat uses Docker for containerization and Docker Compose for local development orchestration.
+QuikApp uses Docker for containerization and Docker Compose for local development orchestration.
 
 ## Docker Compose Files
 
@@ -20,7 +20,7 @@ services:
   # ===================
   nginx:
     image: nginx:alpine
-    container_name: quckchat-nginx
+    container_name: QuikApp-nginx
     ports:
       - "80:80"
       - "443:443"
@@ -31,7 +31,7 @@ services:
       - backend
       - realtime
     networks:
-      - quckchat-network
+      - QuikApp-network
     restart: unless-stopped
 
   # ===================
@@ -39,31 +39,31 @@ services:
   # ===================
   postgres:
     image: postgres:15-alpine
-    container_name: quckchat-postgres
+    container_name: QuikApp-postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-quckchat}
+      POSTGRES_USER: ${POSTGRES_USER:-QuikApp}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
-      POSTGRES_DB: ${POSTGRES_DB:-quckchat}
+      POSTGRES_DB: ${POSTGRES_DB:-QuikApp}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-scripts/postgres:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     networks:
-      - quckchat-network
+      - QuikApp-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U quckchat"]
+      test: ["CMD-SHELL", "pg_isready -U QuikApp"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   mysql:
     image: mysql:8.0
-    container_name: quckchat-mysql
+    container_name: QuikApp-mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootsecret}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-quckchat_auth}
-      MYSQL_USER: ${MYSQL_USER:-quckchat}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-QuikApp_auth}
+      MYSQL_USER: ${MYSQL_USER:-QuikApp}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-secret}
     volumes:
       - mysql_data:/var/lib/mysql
@@ -71,7 +71,7 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - quckchat-network
+      - QuikApp-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -80,27 +80,27 @@ services:
 
   mongodb:
     image: mongo:6.0
-    container_name: quckchat-mongodb
+    container_name: QuikApp-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-quckchat}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-QuikApp}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-secret}
     volumes:
       - mongodb_data:/data/db
     ports:
       - "27017:27017"
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   redis:
     image: redis:7-alpine
-    container_name: quckchat-redis
+    container_name: QuikApp-redis
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-secret}
     volumes:
       - redis_data:/data
     ports:
       - "6379:6379"
     networks:
-      - quckchat-network
+      - QuikApp-network
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -112,18 +112,18 @@ services:
   # ===================
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
-    container_name: quckchat-zookeeper
+    container_name: QuikApp-zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     volumes:
       - zookeeper_data:/var/lib/zookeeper/data
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
-    container_name: quckchat-kafka
+    container_name: QuikApp-kafka
     depends_on:
       - zookeeper
     ports:
@@ -138,25 +138,25 @@ services:
     volumes:
       - kafka_data:/var/lib/kafka/data
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   # ===================
   # SERVICE DISCOVERY
   # ===================
   consul:
     image: consul:1.15
-    container_name: quckchat-consul
+    container_name: QuikApp-consul
     ports:
       - "8500:8500"
     command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
     volumes:
       - consul_data:/consul/data
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   vault:
     image: vault:1.13
-    container_name: quckchat-vault
+    container_name: QuikApp-vault
     ports:
       - "8200:8200"
     environment:
@@ -165,10 +165,10 @@ services:
     cap_add:
       - IPC_LOCK
     networks:
-      - quckchat-network
+      - QuikApp-network
 
 networks:
-  quckchat-network:
+  QuikApp-network:
     driver: bridge
 
 volumes:
@@ -193,7 +193,7 @@ services:
   # ===================
   auth-service:
     build: ./services/auth-service
-    container_name: quckchat-auth
+    container_name: QuikApp-auth
     ports:
       - "8001:8001"
     environment:
@@ -207,11 +207,11 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   user-service:
     build: ./services/user-service
-    container_name: quckchat-user
+    container_name: QuikApp-user
     ports:
       - "8002:8002"
     environment:
@@ -222,19 +222,19 @@ services:
       mysql:
         condition: service_healthy
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   # ===================
   # NESTJS SERVICES
   # ===================
   backend:
     build: ./backend
-    container_name: quckchat-backend
+    container_name: QuikApp-backend
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgresql://quckchat:secret@postgres:5432/quckchat
+      - DATABASE_URL=postgresql://QuikApp:secret@postgres:5432/QuikApp
       - REDIS_URL=redis://:secret@redis:6379
     depends_on:
       postgres:
@@ -242,11 +242,11 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   realtime:
     build: ./services/realtime-service
-    container_name: quckchat-realtime
+    container_name: QuikApp-realtime
     ports:
       - "3001:3001"
     environment:
@@ -256,11 +256,11 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   notification:
     build: ./services/notification-service
-    container_name: quckchat-notification
+    container_name: QuikApp-notification
     ports:
       - "3002:3002"
     environment:
@@ -269,58 +269,58 @@ services:
     depends_on:
       - kafka
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   # ===================
   # ELIXIR SERVICES
   # ===================
   presence:
     build: ./services/presence-service
-    container_name: quckchat-presence
+    container_name: QuikApp-presence
     ports:
       - "4001:4001"
     environment:
       - MIX_ENV=prod
       - REDIS_URL=redis://:secret@redis:6379
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   call:
     build: ./services/call-service
-    container_name: quckchat-call
+    container_name: QuikApp-call
     ports:
       - "4002:4002"
     environment:
       - MIX_ENV=prod
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   # ===================
   # GO SERVICES
   # ===================
   workspace:
     build: ./services/workspace-service
-    container_name: quckchat-workspace
+    container_name: QuikApp-workspace
     ports:
       - "6001:6001"
     environment:
-      - DATABASE_URL=postgresql://quckchat:secret@postgres:5432/quckchat
+      - DATABASE_URL=postgresql://QuikApp:secret@postgres:5432/QuikApp
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   channel:
     build: ./services/channel-service
-    container_name: quckchat-channel
+    container_name: QuikApp-channel
     ports:
       - "6002:6002"
     environment:
-      - DATABASE_URL=postgresql://quckchat:secret@postgres:5432/quckchat
+      - DATABASE_URL=postgresql://QuikApp:secret@postgres:5432/QuikApp
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   search:
     build: ./services/search-service
-    container_name: quckchat-search
+    container_name: QuikApp-search
     ports:
       - "6003:6003"
     environment:
@@ -328,24 +328,24 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   # ===================
   # PYTHON SERVICES
   # ===================
   analytics:
     build: ./services/analytics-service
-    container_name: quckchat-analytics
+    container_name: QuikApp-analytics
     ports:
       - "5001:5001"
     environment:
-      - DATABASE_URL=postgresql://quckchat:secret@postgres:5432/quckchat
+      - DATABASE_URL=postgresql://QuikApp:secret@postgres:5432/QuikApp
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   ml:
     build: ./services/ml-service
-    container_name: quckchat-ml
+    container_name: QuikApp-ml
     ports:
       - "5006:5006"
     environment:
@@ -353,14 +353,14 @@ services:
     volumes:
       - ./models:/models:ro
     networks:
-      - quckchat-network
+      - QuikApp-network
 
   # ===================
   # SEARCH
   # ===================
   elasticsearch:
     image: elasticsearch:8.8.0
-    container_name: quckchat-elasticsearch
+    container_name: QuikApp-elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -370,13 +370,13 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - quckchat-network
+      - QuikApp-network
 
 volumes:
   elasticsearch_data:
 
 networks:
-  quckchat-network:
+  QuikApp-network:
     external: true
 ```
 
@@ -517,10 +517,10 @@ docker-compose -f docker-compose.services.yml down
 docker-compose -f docker-compose.services.yml build
 
 # Tag for registry
-docker tag quckchat-backend:latest registry.quckchat.dev/backend:v1.0.0
+docker tag QuikApp-backend:latest registry.QuikApp.dev/backend:v1.0.0
 
 # Push to registry
-docker push registry.quckchat.dev/backend:v1.0.0
+docker push registry.QuikApp.dev/backend:v1.0.0
 ```
 
 ## Environment Variables
@@ -529,15 +529,15 @@ Create a `.env` file in the project root:
 
 ```env
 # Database
-POSTGRES_USER=quckchat
+POSTGRES_USER=QuikApp
 POSTGRES_PASSWORD=your-secure-password
-POSTGRES_DB=quckchat
+POSTGRES_DB=QuikApp
 
 MYSQL_ROOT_PASSWORD=your-root-password
-MYSQL_USER=quckchat
+MYSQL_USER=QuikApp
 MYSQL_PASSWORD=your-secure-password
 
-MONGO_USER=quckchat
+MONGO_USER=QuikApp
 MONGO_PASSWORD=your-secure-password
 
 # Cache

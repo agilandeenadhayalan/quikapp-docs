@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Infrastructure Overview
 
-QuckChat's infrastructure is designed for high availability, scalability, and maintainability using containerization and orchestration.
+QuikApp's infrastructure is designed for high availability, scalability, and maintainability using containerization and orchestration.
 
 ## Architecture Diagram
 
@@ -116,9 +116,9 @@ services:
 
 ```
 ├── namespaces/
-│   ├── quckchat-core/
-│   ├── quckchat-data/
-│   └── quckchat-infra/
+│   ├── QuikApp-core/
+│   ├── QuikApp-data/
+│   └── QuikApp-infra/
 ├── deployments/
 │   ├── backend-deployment.yaml
 │   ├── realtime-deployment.yaml
@@ -135,7 +135,7 @@ services:
 ### Internal Network
 
 ```
-quckchat-network (bridge/overlay)
+QuikApp-network (bridge/overlay)
 ├── 10.0.1.0/24  - Core Services
 ├── 10.0.2.0/24  - Databases
 ├── 10.0.3.0/24  - Cache/Queue

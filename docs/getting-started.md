@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Getting Started
 
-This guide will help you set up QuckChat for local development.
+This guide will help you set up QuikApp for local development.
 
 ## Prerequisites
 
@@ -35,8 +35,8 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/quckchat/quckchat.git
-cd quckchat
+git clone https://github.com/QuikApp/QuikApp.git
+cd QuikApp
 ```
 
 ### 2. Set Up Environment Variables
@@ -115,7 +115,7 @@ curl http://localhost:5004/health           # Workspace Service
 ## Project Structure
 
 ```
-quckchat/
+QuikApp/
 ├── backend/                    # NestJS API Gateway
 │   ├── src/
 │   │   ├── common/            # Shared utilities

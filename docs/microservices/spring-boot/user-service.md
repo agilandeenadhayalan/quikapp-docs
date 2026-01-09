@@ -168,7 +168,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/quckchat_users
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/QuikApp_users
     username: ${MYSQL_USER:root}
     password: ${MYSQL_PASSWORD:password}
 
@@ -179,7 +179,7 @@ spring:
 
 storage:
   type: s3
-  bucket: quckchat-avatars
+  bucket: QuikApp-avatars
   region: ${AWS_REGION:us-east-1}
 ```
 
@@ -209,7 +209,7 @@ public class UserService {
             .build());
 
         // Publish event
-        kafkaTemplate.send("quckchat.users.events",
+        kafkaTemplate.send("QuikApp.users.events",
             new UserCreatedEvent(user.getId(), user.getEmail()));
 
         return user;

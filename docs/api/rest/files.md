@@ -16,7 +16,7 @@ Content-Type: multipart/form-data
 {
   "id": "file-uuid",
   "filename": "document.pdf",
-  "url": "https://cdn.quckchat.dev/files/...",
+  "url": "https://cdn.quikapp.dev/files/...",
   "size": 1024000,
   "mimeType": "application/pdf"
 }

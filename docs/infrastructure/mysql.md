@@ -4,7 +4,7 @@ sidebar_position: 9
 
 # MySQL
 
-QuckChat uses MySQL as the database for Spring Boot microservices, providing robust authentication, user management, and permission storage.
+QuikApp uses MySQL as the database for Spring Boot microservices, providing robust authentication, user management, and permission storage.
 
 ## Architecture
 
@@ -37,18 +37,18 @@ QuckChat uses MySQL as the database for Spring Boot microservices, providing rob
 
 | Service | Database | Purpose |
 |---------|----------|---------|
-| **auth-service** (Spring Boot) | `quckchat_auth` | Authentication, tokens, sessions |
-| **user-service** (Spring Boot) | `quckchat_user` | User profiles, preferences |
-| **permission-service** (Spring Boot) | `quckchat_permission` | RBAC, roles, permissions |
-| **audit-service** (Spring Boot) | `quckchat_audit` | Audit logs, compliance |
-| **admin-service** (Spring Boot) | `quckchat_admin` | Admin operations, system config |
+| **auth-service** (Spring Boot) | `QuikApp_auth` | Authentication, tokens, sessions |
+| **user-service** (Spring Boot) | `QuikApp_user` | User profiles, preferences |
+| **permission-service** (Spring Boot) | `QuikApp_permission` | RBAC, roles, permissions |
+| **audit-service** (Spring Boot) | `QuikApp_audit` | Audit logs, compliance |
+| **admin-service** (Spring Boot) | `QuikApp_admin` | Admin operations, system config |
 
 ## Database Schema
 
 ### Auth Database
 
 ```sql
--- quckchat_auth
+-- QuikApp_auth
 
 CREATE TABLE users_auth (
     id CHAR(36) PRIMARY KEY,
@@ -132,7 +132,7 @@ CREATE TABLE otp_codes (
 ### User Database
 
 ```sql
--- quckchat_user
+-- QuikApp_user
 
 CREATE TABLE users (
     id CHAR(36) PRIMARY KEY,
@@ -189,7 +189,7 @@ CREATE TABLE user_devices (
 ### Permission Database
 
 ```sql
--- quckchat_permission
+-- QuikApp_permission
 
 CREATE TABLE roles (
     id CHAR(36) PRIMARY KEY,
@@ -244,7 +244,7 @@ INSERT INTO roles (id, name, description, is_system, priority) VALUES
 ### Audit Database
 
 ```sql
--- quckchat_audit
+-- QuikApp_audit
 
 CREATE TABLE audit_logs (
     id CHAR(36) PRIMARY KEY,
@@ -312,10 +312,10 @@ CREATE TABLE security_events (
 services:
   mysql:
     image: mysql:8.0
-    container_name: quckchat-mysql
+    container_name: QuikApp-mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootsecret}
-      MYSQL_USER: ${MYSQL_USER:-quckchat}
+      MYSQL_USER: ${MYSQL_USER:-QuikApp}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-secret}
     volumes:
       - mysql_data:/var/lib/mysql
@@ -324,7 +324,7 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - quckchat-network
+      - QuikApp-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
@@ -350,17 +350,17 @@ volumes:
 ```sql
 -- init-scripts/mysql/01-init-databases.sql
 
-CREATE DATABASE IF NOT EXISTS quckchat_auth;
-CREATE DATABASE IF NOT EXISTS quckchat_user;
-CREATE DATABASE IF NOT EXISTS quckchat_permission;
-CREATE DATABASE IF NOT EXISTS quckchat_audit;
-CREATE DATABASE IF NOT EXISTS quckchat_admin;
+CREATE DATABASE IF NOT EXISTS QuikApp_auth;
+CREATE DATABASE IF NOT EXISTS QuikApp_user;
+CREATE DATABASE IF NOT EXISTS QuikApp_permission;
+CREATE DATABASE IF NOT EXISTS QuikApp_audit;
+CREATE DATABASE IF NOT EXISTS QuikApp_admin;
 
-GRANT ALL PRIVILEGES ON quckchat_auth.* TO 'quckchat'@'%';
-GRANT ALL PRIVILEGES ON quckchat_user.* TO 'quckchat'@'%';
-GRANT ALL PRIVILEGES ON quckchat_permission.* TO 'quckchat'@'%';
-GRANT ALL PRIVILEGES ON quckchat_audit.* TO 'quckchat'@'%';
-GRANT ALL PRIVILEGES ON quckchat_admin.* TO 'quckchat'@'%';
+GRANT ALL PRIVILEGES ON QuikApp_auth.* TO 'QuikApp'@'%';
+GRANT ALL PRIVILEGES ON QuikApp_user.* TO 'QuikApp'@'%';
+GRANT ALL PRIVILEGES ON QuikApp_permission.* TO 'QuikApp'@'%';
+GRANT ALL PRIVILEGES ON QuikApp_audit.* TO 'QuikApp'@'%';
+GRANT ALL PRIVILEGES ON QuikApp_admin.* TO 'QuikApp'@'%';
 
 FLUSH PRIVILEGES;
 ```
@@ -373,8 +373,8 @@ FLUSH PRIVILEGES;
 # auth-service/src/main/resources/application.yml
 spring:
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/quckchat_auth?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: ${MYSQL_USER:quckchat}
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/QuikApp_auth?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER:QuikApp}
     password: ${MYSQL_PASSWORD:secret}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
@@ -559,7 +559,7 @@ SELECT
     table_name AS 'Table',
     ROUND(((data_length + index_length) / 1024 / 1024), 2) AS 'Size (MB)'
 FROM information_schema.tables
-WHERE table_schema IN ('quckchat_auth', 'quckchat_user', 'quckchat_permission', 'quckchat_audit')
+WHERE table_schema IN ('QuikApp_auth', 'QuikApp_user', 'QuikApp_permission', 'QuikApp_audit')
 ORDER BY (data_length + index_length) DESC;
 
 -- Index usage
@@ -569,7 +569,7 @@ SELECT
     index_name,
     count_star AS usage_count
 FROM performance_schema.table_io_waits_summary_by_index_usage
-WHERE object_schema LIKE 'quckchat_%'
+WHERE object_schema LIKE 'QuikApp_%'
 ORDER BY count_star DESC;
 ```
 
@@ -580,13 +580,13 @@ ORDER BY count_star DESC;
 services:
   mysql-exporter:
     image: prom/mysqld-exporter:v0.15.0
-    container_name: quckchat-mysql-exporter
+    container_name: QuikApp-mysql-exporter
     environment:
       DATA_SOURCE_NAME: "exporter:exporterpass@(mysql:3306)/"
     ports:
       - "9104:9104"
     networks:
-      - quckchat-network
+      - QuikApp-network
 ```
 
 ## Backup & Recovery
@@ -597,7 +597,7 @@ services:
 
 BACKUP_DIR="/backups/mysql"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-DATABASES="quckchat_auth quckchat_user quckchat_permission quckchat_audit quckchat_admin"
+DATABASES="QuikApp_auth QuikApp_user QuikApp_permission QuikApp_audit QuikApp_admin"
 
 for DB in $DATABASES; do
     mysqldump -h localhost -u root -p"$MYSQL_ROOT_PASSWORD" \
@@ -613,5 +613,5 @@ done
 find $BACKUP_DIR -name "*.sql.gz" -mtime +30 -delete
 
 # Upload to S3
-aws s3 sync $BACKUP_DIR s3://quckchat-backups/mysql/
+aws s3 sync $BACKUP_DIR s3://QuikApp-backups/mysql/
 ```

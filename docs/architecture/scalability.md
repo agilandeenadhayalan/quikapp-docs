@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Scalability
 
-How QuckChat scales to handle millions of concurrent users.
+How QuikApp scales to handle millions of concurrent users.
 
 ## Scaling Strategies
 
@@ -130,7 +130,7 @@ How QuckChat scales to handle millions of concurrent users.
 │                 KAFKA PARTITIONING                               │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  Topic: quckchat.messages.events                                │
+│  Topic: QuikApp.messages.events                                │
 │  Partitions: 12                                                 │
 │  Replication Factor: 3                                          │
 │                                                                  │

@@ -4,13 +4,13 @@ sidebar_position: 1
 
 # Microservices Overview
 
-QuckChat consists of **32 microservices** built with 5 different technology stacks.
+QuikApp consists of **32 microservices** built with 5 different technology stacks.
 
 ## Service Map
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                          QUCKCHAT MICROSERVICES                              │
+│                          QuikApp MICROSERVICES                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │

@@ -10,8 +10,8 @@ The QA environment is dedicated to quality assurance testing with automated test
 
 | Aspect | Configuration |
 |--------|---------------|
-| **URL** | `https://qa.quckchat.com` |
-| **API** | `https://api.qa.quckchat.com` |
+| **URL** | `https://qa.QuikApp.com` |
+| **API** | `https://api.qa.QuikApp.com` |
 | **Purpose** | Quality assurance testing |
 | **Data** | Test data (automated + manual) |
 | **Deployment** | On PR merge to `main` |
@@ -44,7 +44,7 @@ The QA environment is dedicated to quality assurance testing with automated test
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: quckchat-qa
+namespace: QuikApp-qa
 
 resources:
   - ../../base
@@ -60,9 +60,9 @@ replicas:
     count: 2
 
 images:
-  - name: registry.quckchat.dev/backend
+  - name: registry.QuikApp.dev/backend
     newTag: qa-latest
-  - name: registry.quckchat.dev/auth-service
+  - name: registry.QuikApp.dev/auth-service
     newTag: qa-latest
 
 configMapGenerator:
@@ -89,30 +89,30 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: qa-config
-  namespace: quckchat-qa
+  namespace: QuikApp-qa
 data:
   # Environment
   ENVIRONMENT: "qa"
   LOG_LEVEL: "info"
 
   # URLs
-  API_URL: "https://api.qa.quckchat.com"
-  WS_URL: "wss://ws.qa.quckchat.com"
-  CDN_URL: "https://cdn.qa.quckchat.com"
+  API_URL: "https://api.qa.QuikApp.com"
+  WS_URL: "wss://ws.qa.QuikApp.com"
+  CDN_URL: "https://cdn.qa.QuikApp.com"
 
   # Database endpoints
-  POSTGRES_HOST: "quckchat-qa.cluster-xxxxx.us-east-1.rds.amazonaws.com"
-  MYSQL_HOST: "quckchat-qa-mysql.cluster-xxxxx.us-east-1.rds.amazonaws.com"
-  MONGODB_HOST: "quckchat-qa-docdb.cluster-xxxxx.us-east-1.docdb.amazonaws.com"
+  POSTGRES_HOST: "QuikApp-qa.cluster-xxxxx.us-east-1.rds.amazonaws.com"
+  MYSQL_HOST: "QuikApp-qa-mysql.cluster-xxxxx.us-east-1.rds.amazonaws.com"
+  MONGODB_HOST: "QuikApp-qa-docdb.cluster-xxxxx.us-east-1.docdb.amazonaws.com"
 
   # Cache
-  REDIS_HOST: "quckchat-qa.xxxxx.cache.amazonaws.com"
+  REDIS_HOST: "QuikApp-qa.xxxxx.cache.amazonaws.com"
 
   # Kafka
-  KAFKA_BROKERS: "b-1.quckchat-qa.xxxxx.kafka.us-east-1.amazonaws.com:9092"
+  KAFKA_BROKERS: "b-1.QuikApp-qa.xxxxx.kafka.us-east-1.amazonaws.com:9092"
 
   # Elasticsearch
-  ELASTICSEARCH_URL: "https://quckchat-qa.us-east-1.es.amazonaws.com"
+  ELASTICSEARCH_URL: "https://QuikApp-qa.us-east-1.es.amazonaws.com"
 
   # Feature Flags
   ENABLE_SWAGGER: "true"
@@ -134,8 +134,8 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  EKS_CLUSTER: quckchat-qa
-  REGISTRY: registry.quckchat.dev
+  EKS_CLUSTER: QuikApp-qa
+  REGISTRY: registry.QuikApp.dev
 
 jobs:
   test:
@@ -182,7 +182,7 @@ jobs:
       - name: Deploy to QA
         run: |
           kubectl apply -k k8s/overlays/qa
-          kubectl rollout status deployment/backend -n quckchat-qa --timeout=300s
+          kubectl rollout status deployment/backend -n QuikApp-qa --timeout=300s
 
   run-tests:
     needs: build-and-deploy
@@ -191,7 +191,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run smoke tests
-        run: ./scripts/smoke-tests.sh https://api.qa.quckchat.com
+        run: ./scripts/smoke-tests.sh https://api.qa.QuikApp.com
 
       - name: Run E2E tests
         run: |
@@ -226,8 +226,8 @@ jobs:
 # qa-tests/config.yaml
 environments:
   qa:
-    base_url: https://api.qa.quckchat.com
-    ws_url: wss://ws.qa.quckchat.com
+    base_url: https://api.qa.QuikApp.com
+    ws_url: wss://ws.qa.QuikApp.com
 
 test_suites:
   smoke:
@@ -271,7 +271,7 @@ test_suites:
 echo "Setting up QA test data..."
 
 # Create test users
-curl -X POST https://api.qa.quckchat.com/admin/seed \
+curl -X POST https://api.qa.QuikApp.com/admin/seed \
   -H "Authorization: Bearer $QA_ADMIN_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -291,21 +291,21 @@ echo "QA data setup complete!"
 
 | Email | Password | Role | Purpose |
 |-------|----------|------|---------|
-| qa.admin@quckchat.com | QaAdmin123! | Super Admin | Administrative testing |
-| qa.owner@quckchat.com | QaOwner123! | Workspace Owner | Workspace management testing |
-| qa.member@quckchat.com | QaMember123! | Member | General feature testing |
-| qa.guest@quckchat.com | QaGuest123! | Guest | Limited access testing |
-| qa.bot@quckchat.com | QaBot123! | Bot | Integration testing |
+| qa.admin@QuikApp.com | QaAdmin123! | Super Admin | Administrative testing |
+| qa.owner@QuikApp.com | QaOwner123! | Workspace Owner | Workspace management testing |
+| qa.member@QuikApp.com | QaMember123! | Member | General feature testing |
+| qa.guest@QuikApp.com | QaGuest123! | Guest | Limited access testing |
+| qa.bot@QuikApp.com | QaBot123! | Bot | Integration testing |
 
 ## Monitoring
 
 | Tool | URL | Purpose |
 |------|-----|---------|
-| Grafana | https://grafana.qa.quckchat.com | Metrics dashboards |
-| Jaeger | https://jaeger.qa.quckchat.com | Distributed tracing |
-| Kibana | https://logs.qa.quckchat.com | Log analysis |
-| TestRail | https://testrail.quckchat.com | Test management |
-| Allure | https://allure.qa.quckchat.com | Test reports |
+| Grafana | https://grafana.qa.QuikApp.com | Metrics dashboards |
+| Jaeger | https://jaeger.qa.QuikApp.com | Distributed tracing |
+| Kibana | https://logs.qa.QuikApp.com | Log analysis |
+| TestRail | https://testrail.QuikApp.com | Test management |
+| Allure | https://allure.qa.QuikApp.com | Test reports |
 
 ## Test Result Integration
 
@@ -315,7 +315,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: qa-test-reporter
-  namespace: quckchat-qa
+  namespace: QuikApp-qa
 spec:
   schedule: "0 8 * * 1-5"  # Weekdays at 8 AM
   jobTemplate:
@@ -324,7 +324,7 @@ spec:
         spec:
           containers:
             - name: reporter
-              image: registry.quckchat.dev/test-reporter:latest
+              image: registry.QuikApp.dev/test-reporter:latest
               env:
                 - name: SLACK_WEBHOOK
                   valueFrom:
@@ -356,7 +356,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: qa-data-reset
-  namespace: quckchat-qa
+  namespace: QuikApp-qa
 spec:
   schedule: "0 0 * * 1"  # Every Monday at midnight
   jobTemplate:
@@ -365,7 +365,7 @@ spec:
         spec:
           containers:
             - name: data-reset
-              image: registry.quckchat.dev/db-tools:latest
+              image: registry.QuikApp.dev/db-tools:latest
               command: ["/scripts/reset-qa-data.sh"]
               env:
                 - name: PRESERVE_TEST_USERS
@@ -381,7 +381,7 @@ spec:
 
 ```bash
 # Connect to QA VPN
-openvpn --config quckchat-qa.ovpn
+openvpn --config QuikApp-qa.ovpn
 
 # Or AWS Client VPN
 aws ec2 create-client-vpn-connection \
@@ -392,11 +392,11 @@ aws ec2 create-client-vpn-connection \
 
 ```bash
 # Configure kubectl for QA
-aws eks update-kubeconfig --name quckchat-qa --region us-east-1
+aws eks update-kubeconfig --name QuikApp-qa --region us-east-1
 
 # Verify access
-kubectl get pods -n quckchat-qa
+kubectl get pods -n QuikApp-qa
 
 # View test pod logs
-kubectl logs -f deployment/test-runner -n quckchat-qa
+kubectl logs -f deployment/test-runner -n QuikApp-qa
 ```
