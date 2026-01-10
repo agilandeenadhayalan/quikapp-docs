@@ -6,6 +6,60 @@ const sidebars: SidebarsConfig = {
     'getting-started',
     {
       type: 'category',
+      label: 'Requirements & Planning',
+      collapsed: true,
+      items: [
+        'requirements/overview',
+        'requirements/srs',
+        'requirements/brd',
+        'requirements/prd',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Design & Architecture',
+      collapsed: true,
+      items: [
+        'design/overview',
+        'design/system-architecture',
+        'design/database-design',
+        'design/ui-ux-design',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Development',
+      collapsed: true,
+      items: [
+        'development/overview',
+        'development/technical-design',
+        'development/code-standards',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Testing & Quality',
+      collapsed: true,
+      items: [
+        'testing/overview',
+        'testing/test-plan',
+        'testing/test-cases',
+        'testing/bug-reports',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Operations',
+      collapsed: true,
+      items: [
+        'operations/overview',
+        'operations/deployment-guide',
+        'operations/release-notes',
+        'operations/maintenance-guide',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Architecture',
       collapsed: false,
       items: [

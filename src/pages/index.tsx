@@ -4,6 +4,7 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
+import DocumentationCategories from '@site/src/components/DocumentationCategories';
 import Heading from '@theme/Heading';
 
 import styles from './index.module.css';
@@ -23,6 +24,12 @@ function HomepageHeader() {
             to="/docs/getting-started">
             Get Started
           </Link>
+          <Link
+            className="button button--outline button--secondary button--lg"
+            to="/docs/"
+            style={{marginLeft: '1rem'}}>
+            Read the Docs
+          </Link>
         </div>
       </div>
     </header>
@@ -33,11 +40,12 @@ export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      title={`${siteConfig.title} Documentation`}
+      description="QuikApp - Enterprise team communication platform documentation">
       <HomepageHeader />
       <main>
         <HomepageFeatures />
+        <DocumentationCategories />
       </main>
     </Layout>
   );
