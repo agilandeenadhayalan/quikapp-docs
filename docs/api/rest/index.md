@@ -33,6 +33,7 @@ Authorization: Bearer <access_token>
 | [Files](./files) | File upload and management |
 | [Search](./search) | Global search functionality |
 | [Notifications](./notifications) | Notification preferences |
+| [**Realtime**](./realtime) | Realtime service (presence, devices, signaling, recording) |
 
 ## Response Format
 

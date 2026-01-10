@@ -75,15 +75,37 @@ QuikApp supports multiple deployment environments, each serving a specific purpo
 
 ## Infrastructure per Environment
 
+### Compute & Database
+
 | Environment | Kubernetes | Database | Redis | Kafka | Replicas |
 |-------------|------------|----------|-------|-------|----------|
 | Local | Docker Compose | SQLite/H2 | Single | Single | 1 |
-| Dev | Minikube | Shared RDS | Shared | Shared | 1 |
-| QA | EKS (small) | Dedicated RDS | Dedicated | Shared | 2 |
-| UAT1-3 | EKS (medium) | Dedicated RDS | Dedicated | Shared | 2 |
-| Staging | EKS (prod-like) | Dedicated RDS | Cluster | Cluster | 3 |
-| Production | EKS (full) | Multi-AZ RDS | Cluster | Cluster | 3-5 |
-| Live | EKS (full) | Multi-AZ RDS | Cluster | Cluster | 5-10 |
+| Dev | AKS (small) | Shared MySQL | Shared | Shared | 1-2 |
+| QA | AKS (small) | Dedicated MySQL | Dedicated | Shared | 2 |
+| UAT1-3 | AKS (medium) | Dedicated MySQL | Dedicated | Shared | 2 |
+| Staging | AKS (prod-like) | Dedicated MySQL | Cluster | Cluster | 3 |
+| Production | AKS (full) | Multi-AZ MySQL | Cluster | Cluster | 3-5 |
+| Live | AKS (full) | Multi-AZ MySQL | Cluster | Cluster | 5-10 |
+
+### AWS Media Infrastructure
+
+QuikApp uses AWS for media storage and delivery alongside Azure Kubernetes Service (AKS) for container orchestration.
+
+| Environment | S3 Bucket | CloudFront | S3 Lifecycle | Encryption |
+|-------------|-----------|------------|--------------|------------|
+| Local | LocalStack S3 | None | 1 day delete | AES-256 |
+| Dev | quikapp-media-dev | Disabled | 7 day delete | SSE-S3 |
+| QA | quikapp-media-qa | Optional | 14 day delete | SSE-S3 |
+| UAT1-3 | quikapp-media-uat | Enabled | 30 day to IA | SSE-KMS |
+| Staging | quikapp-media-staging | Enabled | 30d-IA, 90d-Glacier | SSE-KMS |
+| Production | quikapp-media-prod | Enabled + WAF | 30d-IA, 90d-Glacier | SSE-KMS |
+| Live | quikapp-media-prod | Enabled + WAF + Shield | 30d-IA, 90d-Glacier | SSE-KMS |
+
+For detailed AWS configuration, see:
+- [AWS Infrastructure](../infrastructure/aws.md) - Overall AWS architecture
+- [S3 Media Storage](../infrastructure/s3.md) - Bucket configuration and lifecycle
+- [CloudFront CDN](../infrastructure/cloudfront.md) - CDN and edge delivery
+- [Media Encryption](../infrastructure/media-encryption.md) - E2EE implementation
 
 ## Deployment Flow
 
