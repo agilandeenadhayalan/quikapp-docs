@@ -46,6 +46,7 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Elixir Services',
           items: [
+            'microservices/elixir/realtime-service',
             'microservices/elixir/presence-service',
             'microservices/elixir/call-service',
             'microservices/elixir/message-service',
@@ -88,6 +89,34 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'DevOps',
+      collapsed: false,
+      items: [
+        'devops/overview',
+        {
+          type: 'category',
+          label: 'CI/CD Pipelines',
+          items: [
+            'devops/cicd/github-actions',
+            'devops/cicd/azure-devops',
+            'devops/cicd/secrets',
+            'devops/cicd/service-configs',
+            'devops/cicd/monitoring',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Environments',
+          items: [
+            'devops/environments/overview',
+            'devops/environments/terraform',
+            'devops/environments/kubernetes',
+          ],
+        },
+      ],
+    },
+    {
+      type: 'category',
       label: 'Common Utilities',
       items: [
         'common/overview',
@@ -107,6 +136,16 @@ const sidebars: SidebarsConfig = {
       label: 'Infrastructure',
       items: [
         'infrastructure/index',
+        {
+          type: 'category',
+          label: 'AWS',
+          items: [
+            'infrastructure/aws',
+            'infrastructure/s3',
+            'infrastructure/cloudfront',
+            'infrastructure/media-encryption',
+          ],
+        },
         'infrastructure/docker',
         'infrastructure/nginx',
         'infrastructure/postgres',
@@ -153,6 +192,7 @@ const sidebars: SidebarsConfig = {
         'api/rest/files',
         'api/rest/search',
         'api/rest/notifications',
+        'api/rest/realtime',
       ],
     },
     {
